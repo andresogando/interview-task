@@ -4,7 +4,7 @@ import { ApolloError } from "apollo-server-express";
 import { compareSync } from "bcryptjs";
 import { IUserDocument } from "../interfaces/user.interfaces";
 
-const validateRegisterInput = function ({
+const validateRegisterInput = async function ({
   username,
   password,
   confirmPassword,
@@ -23,7 +23,10 @@ const validateRegisterInput = function ({
     errors.confirmPassword = "Passwords must match";
   }
 
+  const userArgs = { username, password };
+
   return {
+    userArgs,
     errors,
     valid: Object.keys(errors).length < 1,
   };
@@ -44,9 +47,9 @@ const signJWT = async function (data: object) {
 };
 
 const validateLoginInput = async function (
-  username:string,
-  password:string,
-): Promise<IUserDocument> => {
+  username: string,
+  password: string,
+): Promise<any> {
   const errors: any = {};
   console.log(username, password);
 
@@ -58,7 +61,9 @@ const validateLoginInput = async function (
     errors.password = "Password must not be empty";
   }
 
-  const user = await UserModel.findOne({ username });
+  const user = await UserModel.findOne({ username: username });
+
+  console.log("USER: ", user);
 
   // User?
 
@@ -72,7 +77,7 @@ const validateLoginInput = async function (
   }
 
   //verify token
-  const token = await signJWT(user.toJSON());
+  const token = await signJWT(user);
 
   return {
     user,

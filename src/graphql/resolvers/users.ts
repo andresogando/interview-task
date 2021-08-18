@@ -11,10 +11,13 @@ const userResolver = {
   Query: {},
   Mutation: {
     login: async (_, { username, password }) => {
-      const { valid, errors, user, token } = validateLoginInput(
+      console.log("LOGIN: ", username, password);
+      const { user, valid, token, errors } = await validateLoginInput(
         username,
         password,
       );
+
+      // const { valid, errors, token, user } = loginParams;
 
       if (!valid) {
         throw new ApolloError("Errors: ", { ...errors });
@@ -27,7 +30,7 @@ const userResolver = {
 
       const Session = {
         token,
-        currentUser: { id: user.id, username: user.username },
+        currentUser: { id: user.id, username },
       };
       return { Session };
     },
@@ -43,33 +46,6 @@ const userResolver = {
         password,
         confirmPassword,
       });
-
-      if (!valid) {
-        throw new ApolloError("Error: ", { ...errors });
-      }
-
-      const user = await UserModel.findOne({ username: username });
-      if (user) {
-        throw new ApolloError(
-          ` Error:  Username: [ ${user.username} ] its already taken!`,
-        );
-      }
-
-      // Hash the password & create JWT token
-      password = await hash(password, 12);
-      const token = await generateToken(username);
-
-      const newUser = await UserModel.create({
-        username,
-        password,
-        token,
-        createdAt: new Date().toISOString(),
-      });
-      newUser.save();
-
-      console.log({ newUser });
-
-      return newUser;
     },
   },
   Subscription: {},

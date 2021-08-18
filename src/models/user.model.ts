@@ -1,7 +1,7 @@
 import mongoose, { Schema, model } from "mongoose";
 import { IUserDocument } from "../interfaces/user.interfaces";
 
-const schema = new Schema(
+const schema = new Schema<IUserDocument>(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -15,4 +15,4 @@ const schema = new Schema(
 
 const UserModel = model<IUserDocument>("User", schema);
 
-export { UserModel };
+export { UserModel, IUserDocument };
