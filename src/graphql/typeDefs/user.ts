@@ -1,4 +1,4 @@
-import {gql} from 'apollo-server-express'
+import { gql } from "apollo-server-express";
 
 export default gql`
   type User {
@@ -19,30 +19,18 @@ export default gql`
     username: String
   }
 
-
   type Session {
-      id: ID
-      token: String
-      currentUser: CurrentUser
+    id: ID
+    token: String
+    currentUser: CurrentUser
   }
-
 
   type Query {
-      getUsers: [User]
+    getUsers: [User]
   }
 
-  type Mutation { 
-      register(registerInput:RegisterInput!): User!
-      login(username: String!, password: String!): Session
+  type Mutation {
+    register(registerInput: RegisterInput!): User!
+    login(username: String!, password: String!): Session
   }
-
-
-  
-
-
-
-
-
-
-
 `;

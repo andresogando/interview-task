@@ -25,8 +25,8 @@ async function startServer() {
 
   app.listen(PORT, () =>
     console.log(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-    )
+      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`,
+    ),
   );
 }
 
