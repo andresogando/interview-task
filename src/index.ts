@@ -1,12 +1,9 @@
 // @flow
 import express from "express";
 import { connectToMongoDB } from "./config/mongodb";
-import { ApolloServer } from "apollo-server-express";
-import typeDefs from "./graphql/typeDefs";
-import resolvers from "./graphql/resolvers";
-import { createDataSourceInstances } from "./graphql/dataSources/index";
 import { Router } from "express";
-import users from "./routes/users";
+import usersRouter from "./routes/users";
+import tweetsRouter from "./routes/tweets";
 
 async function startServer() {
   const app = express();
@@ -21,10 +18,12 @@ async function startServer() {
     }),
   );
 
-  app.use("/user", users),
-    app.get("/", function (req, res) {
-      res.end("Hello world!");
-    });
+  app.use("/user", usersRouter);
+  app.use("/tweets", tweetsRouter);
+
+  app.get("/", function (req, res) {
+    res.end("Hello world!");
+  });
 
   app.listen(PORT, () =>
     console.log(`🚀 Server ready at http://localhost:${PORT}`),
