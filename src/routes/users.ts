@@ -5,6 +5,7 @@ import { validateRegisterInput } from "../utils/validator";
 const router = Router();
 const users = new UserDatasources();
 
+// LOGIN
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -39,6 +40,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
+// QUERY USERS
 router.get("/get", async (req, res) => {
   const getUsers = await users.getUsers();
 

@@ -11,14 +11,17 @@ export default class TweetsDatasources extends DataSource<ITweetDocument> {
 
   userContext = new UserDatasources();
 
+  //QUERY ALL
   async getTweets() {
     return await TweetModel.find();
   }
 
+  //QUERY BY USER
   async getTweetsByUser(username) {
     return await TweetModel.find({ username: username });
   }
 
+  // is Tweet Owner?
   async isTweetOwner(userId, id) {
     const tweet = await TweetModel.findById(id);
     if (tweet.user == userId) {
@@ -29,6 +32,7 @@ export default class TweetsDatasources extends DataSource<ITweetDocument> {
     }
   }
 
+  //DELETE
   async deleteTweet(id, token) {
     const tokenOwner = await this.userContext.getCurrentUser(token);
 
@@ -42,6 +46,7 @@ export default class TweetsDatasources extends DataSource<ITweetDocument> {
     }
   }
 
+  //CREATE
   async createTweet({ args: { body, token } }) {
     const user = await this.userContext.getCurrentUser(token);
 
@@ -51,5 +56,24 @@ export default class TweetsDatasources extends DataSource<ITweetDocument> {
       user: user.id,
       createdAt: new Date().toISOString(),
     });
+  }
+
+  //UPDATE
+
+  async updateTweet(args: { id: string; body: any; token: any }) {
+    const { id, body, token } = args;
+    const tokenOwner = await this.userContext.getCurrentUser(token);
+
+    const isValid = await this.isTweetOwner(tokenOwner.id, id);
+
+    if (isValid) {
+      const tweet = await TweetModel.findById(id);
+      const updated = await tweet.updateOne({ body: body });
+      tweet.save();
+
+      return updated;
+    } else {
+      return null;
+    }
   }
 }

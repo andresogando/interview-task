@@ -1,9 +1,9 @@
 // @flow
 import express from "express";
 import { connectToMongoDB } from "./config/mongodb";
-import { Router } from "express";
 import usersRouter from "./routes/users";
 import tweetsRouter from "./routes/tweets";
+import routerLogger from "./utils/logger";
 
 async function startServer() {
   const app = express();
@@ -15,8 +15,9 @@ async function startServer() {
   app.use(
     express.urlencoded({
       extended: true,
-    }),
+    })
   );
+  app.use(routerLogger);
 
   app.use("/user", usersRouter);
   app.use("/tweets", tweetsRouter);
@@ -26,7 +27,7 @@ async function startServer() {
   });
 
   app.listen(PORT, () =>
-    console.log(`🚀 Server ready at http://localhost:${PORT}`),
+    console.log(`🚀 Server ready at http://localhost:${PORT}`)
   );
 }
 

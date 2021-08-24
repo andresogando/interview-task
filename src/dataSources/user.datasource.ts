@@ -11,10 +11,12 @@ export default class UserDatasources extends DataSource<IUserDocument> {
     super();
   }
 
+  //QUERY ALL
   async getUsers() {
     return await UserModel.find();
   }
 
+  //QUERY BY USER
   async getCurrentUser(token: string) {
     return await UserModel.findOne({ token: token });
   }
@@ -45,13 +47,14 @@ export default class UserDatasources extends DataSource<IUserDocument> {
     });
   }
 
+  // GENERATE JWT TOKEN EXPIRE AFTER 1H
   async generateToken(user) {
     return await sign(
       {
         username: user.username,
       },
       "secret",
-      { expiresIn: "1h" },
+      { expiresIn: "1h" }
     );
   }
 
@@ -80,6 +83,7 @@ export default class UserDatasources extends DataSource<IUserDocument> {
     return await this.validateLogin(username, password);
   }
 
+  // QUERY BY USERNAME
   async getUserbyUsername(username) {
     return await UserModel.findOne({ username: username });
   }

@@ -9,6 +9,7 @@ const validateToken = async (token) => {
   return await verify(token, "secret");
 };
 
+//CREATE TWEET
 router.post("/create", async (req, res) => {
   const { body } = req.body;
   const { token } = req.headers;
@@ -29,6 +30,31 @@ router.post("/create", async (req, res) => {
   }
 });
 
+//UPDATE TWEET
+router.post("/update", async (req, res) => {
+  const { id, tweetArgs } = req.body;
+  const { token } = req.headers;
+
+  try {
+    const isValid = await validateToken(token);
+  } catch (e) {
+    res.status(401).send(e);
+  }
+
+  const updateTweet = await tweets.updateTweet({
+    id,
+    body: tweetArgs,
+    token,
+  });
+
+  if (updateTweet) {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+//DELETE TWEET
 router.post("/delete", async (req, res) => {
   const { tweet_id } = req.body;
   const { token } = req.headers;
@@ -48,11 +74,13 @@ router.post("/delete", async (req, res) => {
   }
 });
 
+// QUERY ALL
 router.get("/all", async (req, res) => {
   const getTweets = await tweets.getTweets();
   res.status(200).send(getTweets);
 });
 
+//QUERY BY USER
 router.get("/byuser", async (req, res) => {
   const { username } = req.body;
   const getUserTweets = await tweets.getTweetsByUser(username);

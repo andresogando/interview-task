@@ -1,4 +1,3 @@
-// @flow
 require("dotenv").config();
 import mongoose from "mongoose";
 
@@ -27,8 +26,8 @@ const connectToMongoDB = async () => {
     .catch((error) =>
       console.log(
         `Mongoose connection error: ${error} with connection info`,
-        url,
-      ),
+        url
+      )
     );
 };
 

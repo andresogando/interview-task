@@ -1,6 +1,5 @@
 import { sign, verify } from "jsonwebtoken";
 import { UserModel } from "../models/user.model";
-import { ApolloError } from "apollo-server-express";
 import { compareSync } from "bcryptjs";
 import { IUserDocument } from "../interfaces/user.interfaces";
 
@@ -38,7 +37,7 @@ const generateToken = async function (user) {
       username: user.username,
     },
     "secret",
-    { expiresIn: "1h" },
+    { expiresIn: "1h" }
   );
 };
 
@@ -48,7 +47,7 @@ const signJWT = async function (data: object) {
 
 const validateLoginInput = async function (
   username: string,
-  password: string,
+  password: string
 ): Promise<any> {
   const errors: any = {};
   console.log(username, password);
